@@ -1,6 +1,6 @@
-import { CallEntryObj, CallTypes } from '~/components/CallEntry';
+import { CallEntryObj, CallDirections } from '~/components/CallEntry';
 
-const { INCOMING, OUTGOING, REFUSED } = CallTypes;
+const { INCOMING, OUTGOING, REFUSED } = CallDirections;
 
 const callEntries: CallEntryObj[] = [
   {

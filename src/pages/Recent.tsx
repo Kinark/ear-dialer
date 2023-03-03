@@ -11,23 +11,24 @@ import Separator from '~/components/Separator';
 import archiveIcon from '~/assets/images/archive-fill.svg';
 import { callsListAtom, archivedCallsListAtom } from '~/atoms/callsList';
 import shrinkOnPress from '~/utils/shrinkOnPress';
+import updateCall from '~/api/updateCall';
 
 const Recent = () => {
-  const [callEntries, setCallEntries] = useAtom(callsListAtom);
-  const [archivedCallList, setArchivedCallList] = useAtom(archivedCallsListAtom);
+  const [callEntries, dispatch] = useAtom(callsListAtom);
   const [seeArchive, setSeeArchive] = useState(false);
   const [activeCall, setActiveCall] = useState<string | null>(null);
+  const [loadingCalls, setLoadingCalls] = useState<string[]>([]);
 
-  const listToIterate = seeArchive ? archivedCallList : callEntries;
+  const calls = callEntries.filter(el => seeArchive ? el.is_archived : !el.is_archived );
 
-  const toggleArchiveItem = (id: string) => {
-    const item = listToIterate.find((item) => item.id === id);
+  const toggleArchiveItem = async (id: string) => {
+    const item = callEntries.find((item) => item.id === id)!;
     if (!item) return;
-    const origin = seeArchive ? setArchivedCallList : setCallEntries;
-    const target = seeArchive ? setCallEntries : setArchivedCallList;
-    origin((val) => val.filter((item) => item.id !== id));
-    target((val) => [...val, item]);
     setActiveCall(null);
+    setLoadingCalls((val) => [...val, id]);
+    await updateCall(id, !item.is_archived);
+    await dispatch({ type: 'refetch' })
+    setLoadingCalls((val) => val.filter((item) => item !== id));
   };
 
   useEffect(() => {
@@ -46,9 +47,10 @@ const Recent = () => {
         <LayoutGroup>
           <AnimatePresence>
             {seeArchive && <Separator>Archived</Separator>}
-            {listToIterate.map((entry) => (
+            {calls.map((entry) => (
               <CallEntry
                 key={entry.id}
+                loading={loadingCalls.includes(entry.id)}
                 entry={entry}
                 active={activeCall == entry.id}
                 setActive={() => setActiveCall(activeCall == entry.id ? null : entry.id)}

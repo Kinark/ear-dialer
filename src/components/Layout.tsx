@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import BottomBar from '~/components/BottomBar';
+import LoaderSuspense from '~/components/LoaderSuspense';
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -14,7 +15,9 @@ const Layout = () => {
   }, [navigate]);
   return (
     <BottomBarAvoider>
-      <Outlet />
+      <Suspense fallback={<LoaderSuspense />}>
+        <Outlet />
+      </Suspense>
       <BottomBar />
     </BottomBarAvoider>
   );

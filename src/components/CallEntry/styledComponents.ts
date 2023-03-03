@@ -21,6 +21,7 @@ export const Button = styled.button`
 export const Wrapper = styled(motion.div)<{ active: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
   align-items: stretch;
   gap: 16px;
   background-color: ${({ theme }) => theme.colors.card};
@@ -76,6 +77,10 @@ export const MainInfo = styled.div`
     font-weight: 600;
     color: ${({ theme }) => theme.colors.body};
   }
+`;
+
+export const TimeWrapper = styled.div`
+  text-align: right;
 `;
 
 export const EntryContent = styled.div`
