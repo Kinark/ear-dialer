@@ -66,7 +66,7 @@ interface CallEntryProps {
 }
 
 const CallEntry = ({ loading, entry, active, setActive, toggleArchive, archiveVisible }: CallEntryProps) => {
-  const contact = contacts.find((contact) => contact.number === entry.from);
+  // const contact = contacts.find((contact) => contact.number === entry.from);
   const time = dayjs(entry.created_at);
   return (
     <motion.div layout="position" initial="removed" animate="visible" exit="removed" variants={commonVariants}>
@@ -77,7 +77,7 @@ const CallEntry = ({ loading, entry, active, setActive, toggleArchive, archiveVi
             <Img src={directionsIcons[entry.direction]} />
           </CallIcon>
           <MainInfo>
-            <div>{contact?.name || entry.from}</div>
+            <div>{entry.from}</div>
             <div>
               {entry.duration > 60 ? (entry.duration / 60).toFixed(0) : entry.duration}{' '}
               {entry.duration > 60 ? 'minutes' : 'seconds'}
